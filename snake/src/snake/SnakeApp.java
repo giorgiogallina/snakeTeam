@@ -17,6 +17,7 @@ public class SnakeApp {
 	private Canvas canvas;
 	
 	private Body snk;
+	private char sposta;
 
 	/**
 	 * Launch the application.
@@ -40,16 +41,35 @@ public class SnakeApp {
 		shell.open();
 		shell.layout();
 		while (!shell.isDisposed()) {
-			if (!display.readAndDispatch()) {
-				display.sleep();
+			//if (!display.readAndDispatch()) {
+			//display.sleep();
+		//}
+		while (!display.readAndDispatch()){
+			snk.move(sposta);
+			if(snk.collision(250, 100)){
+				snk.increase(sposta);
 			}
+			draw();
+			try {
+				Thread.sleep(150);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		}
 	}
 	
 	private void draw(){
 		GC gc = new GC(canvas);
+		gc.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		gc.fillRectangle(0, 0, canvas.getBounds().width, canvas.getBounds().height);
+		gc.setBackground(SWTResourceManager.getColor(255,0,0));
+		gc.fillOval(250, 100, 10, 10);
+		gc.drawOval(250, 100, 10, 10);
+		gc.setBackground(SWTResourceManager.getColor(0,255,0));
 		for(int i = 0; i < snk.length(); i++){
+			gc.fillOval(snk.getItemCoordinates(i)[0], snk.getItemCoordinates(i)[1], Body.uni, Body.uni);
 			gc.drawOval(snk.getItemCoordinates(i)[0], snk.getItemCoordinates(i)[1], Body.uni, Body.uni);
 		}
 	}
@@ -62,21 +82,21 @@ public class SnakeApp {
 		shell.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
+				
 				switch(e.keyCode){
 				case 16777217:
-					snk.move('u');
+					sposta = 'u';
 					break;
 				case 16777218:
-					snk.move('d');
+					sposta = 'd';
 					break;
 				case 16777219:
-					snk.move('l');
+					sposta = 'l';
 					break;
 				case 16777220:
-					snk.move('r');
+					sposta = 'r';
 					break;
 				}
-				draw();
 			}
 		});
 		shell.setSize(650, 450);
@@ -89,10 +109,7 @@ public class SnakeApp {
 				Punto.xMax = canvas.getBounds().width;
 				Punto.yMax = canvas.getBounds().height;
 				snk = new Body();
-				GC gc = new GC(canvas);
-				for(int i = 0; i < snk.length(); i++){
-					gc.drawOval(snk.getItemCoordinates(i)[0], snk.getItemCoordinates(i)[1], Body.uni, Body.uni);
-				}
+				draw();
 			}
 		});
 		canvas.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
