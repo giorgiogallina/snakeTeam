@@ -167,4 +167,22 @@ public class Body {
 		}
 		return true;
 	}
+	
+	/**
+	 * 
+	 * @param apple
+	 * @return
+	 */
+	public boolean collision(Punto apple){
+		return collision(apple.getX(), apple.getY());
+	}
+
+	/**
+	 * @param x
+	 * @param y
+	 * @return
+	 */
+	public boolean collision(int x, int y) {
+		return (((snake[0].getX() < x+uni && snake[0].getX() > x) || (snake[0].getX()+uni < x+uni && snake[0].getX()+uni > x)) && ((snake[0].getY() > y && snake[0].getY() <= y+uni) || (snake[0].getY()+uni >= y && snake[0].getY()+uni < y+uni)));
+	}
 }
