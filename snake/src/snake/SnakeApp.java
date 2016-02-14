@@ -60,6 +60,9 @@ public class SnakeApp {
 		}
 	}
 	
+	/**
+	 * 
+	 */
 	private void draw(){
 		GC gc = new GC(canvas);
 		gc.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
