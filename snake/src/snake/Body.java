@@ -124,6 +124,7 @@ public class Body {
 	 * @return it returns true if it has been possible to add a new element to the array, otherwise it returns false.
 	 */
 	public boolean move(char direction){
+		Punto[] backup = Arrays.copyOf(snake, snake.length);
 		shiftRight();
 		switch(direction){
 		case 'd': case 'D': //down
@@ -163,6 +164,7 @@ public class Body {
 			}
 			break;
 		default:
+			snake = backup;
 			break;
 		}
 		return true;
@@ -183,6 +185,6 @@ public class Body {
 	 * @return
 	 */
 	public boolean collision(int x, int y) {
-		return (((snake[0].getX() < x+uni && snake[0].getX() > x) || (snake[0].getX()+uni < x+uni && snake[0].getX()+uni > x)) && ((snake[0].getY() > y && snake[0].getY() <= y+uni) || (snake[0].getY()+uni >= y && snake[0].getY()+uni < y+uni)));
+		return (((snake[0].getX() <= x+uni && snake[0].getX() > x) || (snake[0].getX()+uni <= x+uni && snake[0].getX()+uni > x)) && ((snake[0].getY() > y && snake[0].getY() <= y+uni) || (snake[0].getY()+uni >= y && snake[0].getY()+uni < y+uni)));
 	}
 }
