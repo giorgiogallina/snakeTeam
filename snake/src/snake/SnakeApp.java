@@ -22,7 +22,7 @@ public class SnakeApp {
 	private char sposta;
 	private int xapple;
 	private int yapple;
-	private boolean flag = true;
+	private boolean flag = false;
 	
 	private Random random = new Random();
 
@@ -131,6 +131,7 @@ public class SnakeApp {
 		canvas.addPaintListener(new PaintListener() {
 			public void paintControl(PaintEvent arg0) {
 				Body.uni = 10;
+				sposta = 'u';
 				Punto.xMax = canvas.getBounds().width;
 				Punto.yMax = canvas.getBounds().height;
 				
