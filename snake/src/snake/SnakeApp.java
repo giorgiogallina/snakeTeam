@@ -100,21 +100,25 @@ public class SnakeApp {
 				case 16777217:
 					if(sposta != 'd'){ //per evitare l'inversione dello snake
 						sposta = 'u';
+						flag = true;
 					}
 					break;
 				case 16777218:
 					if(sposta != 'u'){
 						sposta = 'd';
+						flag = true;
 					}
 					break;
 				case 16777219:
 					if(sposta != 'r'){
 						sposta = 'l';
+						flag = true;
 					}
 					break;
 				case 16777220:
 					if(sposta != 'l'){
 						sposta = 'r';
+						flag = true;
 					}
 					break;
 				}
