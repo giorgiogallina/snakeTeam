@@ -1,5 +1,7 @@
 package snake;
 
+import java.util.Random;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
@@ -18,6 +20,10 @@ public class SnakeApp {
 	
 	private Body snk;
 	private char sposta;
+	private int xapple;
+	private int yapple;
+	
+	private Random random = new Random();
 
 	/**
 	 * Launch the application.
@@ -31,7 +37,7 @@ public class SnakeApp {
 			e.printStackTrace();
 		}
 	}
-
+ 
 	/**
 	 * Open the window.
 	 */
@@ -46,8 +52,11 @@ public class SnakeApp {
 		//}
 		while (!display.readAndDispatch()){
 			snk.move(sposta);
-			if(snk.collision(250, 100)){
+			if(snk.collision(xapple, yapple)){
 				snk.increase(sposta);
+				
+				xapple = random.nextInt(canvas.getBounds().width) / snk.getUni() * snk.getUni();
+				yapple = random.nextInt(canvas.getBounds().height) / snk.getUni() * snk.getUni();
 			}
 			draw();
 			try {
@@ -65,8 +74,8 @@ public class SnakeApp {
 		gc.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		gc.fillRectangle(0, 0, canvas.getBounds().width, canvas.getBounds().height);
 		gc.setBackground(SWTResourceManager.getColor(255,0,0));
-		gc.fillOval(250, 100, 10, 10);
-		gc.drawOval(250, 100, 10, 10);
+		gc.fillOval(xapple, yapple, 10, 10);
+		gc.drawOval(xapple, yapple, 10, 10);
 		gc.setBackground(SWTResourceManager.getColor(0,255,0));
 		for(int i = 0; i < snk.length(); i++){
 			gc.fillOval(snk.getItemCoordinates(i)[0], snk.getItemCoordinates(i)[1], Body.uni, Body.uni);
@@ -85,16 +94,24 @@ public class SnakeApp {
 				
 				switch(e.keyCode){
 				case 16777217:
-					sposta = 'u';
+					if(sposta != 'd'){ //per evitare l'inversione dello snake
+						sposta = 'u';
+					}
 					break;
 				case 16777218:
-					sposta = 'd';
+					if(sposta != 'u'){
+						sposta = 'd';
+					}
 					break;
 				case 16777219:
-					sposta = 'l';
+					if(sposta != 'r'){
+						sposta = 'l';
+					}
 					break;
 				case 16777220:
-					sposta = 'r';
+					if(sposta != 'l'){
+						sposta = 'r';
+					}
 					break;
 				}
 			}
@@ -108,6 +125,10 @@ public class SnakeApp {
 				Body.uni = 10;
 				Punto.xMax = canvas.getBounds().width;
 				Punto.yMax = canvas.getBounds().height;
+				
+				xapple = canvas.getBounds().width / 2;
+				yapple = canvas.getBounds().height / 2;
+				
 				snk = new Body();
 				draw();
 			}
