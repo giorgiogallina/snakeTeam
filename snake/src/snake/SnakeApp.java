@@ -50,22 +50,22 @@ public class SnakeApp {
 			//if (!display.readAndDispatch()) {
 			//display.sleep();
 		//}
-		while (!display.readAndDispatch()){
-			snk.move(sposta);
-			if(snk.collision(xapple, yapple)){
-				snk.increase(sposta);
-				
-				xapple = random.nextInt(canvas.getBounds().width) / snk.getUni() * snk.getUni();
-				yapple = random.nextInt(canvas.getBounds().height) / snk.getUni() * snk.getUni();
+			while (!display.readAndDispatch()){
+				snk.move(sposta);
+				if(snk.collision(xapple, yapple)){
+					snk.increase(sposta);
+					
+					xapple = random.nextInt(canvas.getBounds().width) / snk.getUni() * snk.getUni();
+					yapple = random.nextInt(canvas.getBounds().height) / snk.getUni() * snk.getUni();
+				}
+				draw();
+				try {
+					Thread.sleep(150);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
-			draw();
-			try {
-				Thread.sleep(150);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
 		}
 	}
 	
