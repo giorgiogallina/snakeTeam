@@ -22,6 +22,7 @@ public class SnakeApp {
 	private char sposta;
 	private int xapple;
 	private int yapple;
+	private boolean flag = true;
 	
 	private Random random = new Random();
 
@@ -50,7 +51,7 @@ public class SnakeApp {
 			//if (!display.readAndDispatch()) {
 			//display.sleep();
 		//}
-			while (!display.readAndDispatch()){
+			while (!display.readAndDispatch() && flag){
 				snk.move(sposta);
 				if(snk.collision(xapple, yapple)){
 					snk.increase(sposta);
@@ -93,6 +94,9 @@ public class SnakeApp {
 			public void keyPressed(KeyEvent e) {
 				
 				switch(e.keyCode){
+				case 32:
+					flag = !flag;
+					break;
 				case 16777217:
 					if(sposta != 'd'){ //per evitare l'inversione dello snake
 						sposta = 'u';
