@@ -56,12 +56,12 @@ public class SnakeApp {
 				if(snk.collision(xapple, yapple)){
 					snk.increase(sposta);
 					
-					xapple = random.nextInt(canvas.getBounds().width) / snk.getUni() * snk.getUni();
-					yapple = random.nextInt(canvas.getBounds().height) / snk.getUni() * snk.getUni();
+					xapple = random.nextInt(canvas.getBounds().width - snk.getUni()) / snk.getUni() * snk.getUni();
+					yapple = random.nextInt(canvas.getBounds().height - snk.getUni()) / snk.getUni() * snk.getUni();
 				}
 				draw();
 				try {
-					Thread.sleep(150);
+					Thread.sleep(50);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -75,8 +75,8 @@ public class SnakeApp {
 		gc.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		gc.fillRectangle(0, 0, canvas.getBounds().width, canvas.getBounds().height);
 		gc.setBackground(SWTResourceManager.getColor(255,0,0));
-		gc.fillOval(xapple, yapple, 10, 10);
-		gc.drawOval(xapple, yapple, 10, 10);
+		gc.fillOval(xapple, yapple, Body.uni, Body.uni);
+		gc.drawOval(xapple, yapple, Body.uni, Body.uni);
 		gc.setBackground(SWTResourceManager.getColor(0,255,0));
 		for(int i = 0; i < snk.length(); i++){
 			gc.fillOval(snk.getItemCoordinates(i)[0], snk.getItemCoordinates(i)[1], Body.uni, Body.uni);
@@ -124,7 +124,7 @@ public class SnakeApp {
 				}
 			}
 		});
-		shell.setSize(650, 450);
+		shell.setSize(678, 533);
 		shell.setText("Games");
 		
 		canvas = new Canvas(shell, SWT.NONE);
@@ -143,7 +143,7 @@ public class SnakeApp {
 			}
 		});
 		canvas.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
-		canvas.setBounds(0, 0, 634, 411);
+		canvas.setBounds(0, 0, Body.uni * 60, Body.uni * 40);
 
 	}
 }

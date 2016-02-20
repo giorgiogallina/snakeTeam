@@ -86,7 +86,7 @@ public class Body implements Serializable{
 		case 'u':
 		case 'U': // up
 			if (snake.length < 1) {
-				head = new Punto((Punto.xMax - uni) / 2, (Punto.yMax - uni) / 2 - 3 * uni);
+				head = new Punto(((Punto.xMax - uni) / 2) / uni * uni, ((Punto.yMax - uni) / 2 - 3 * uni) / uni * uni);
 			} else {
 				head = new Punto(snake[0].getX(), snake[0].getY() - uni);
 			}
@@ -171,7 +171,7 @@ public class Body implements Serializable{
 			if (snake.length < 1) { // it shouldn't be needed but managing also
 									// this case is better because we have to be
 									// sure to avoid any exception in runtime
-				snake[0] = new Punto((Punto.xMax - uni) / 2, (Punto.yMax - uni) / 2 + 3 * uni);
+				snake[0] = new Punto(((Punto.xMax - uni) / 2) / uni * uni, ((Punto.yMax - uni) / 2 + 3 * uni) / uni * uni);
 			} else {
 				if (snake[0].getY() + uni == 1)
 					return false;
@@ -183,7 +183,7 @@ public class Body implements Serializable{
 			if (snake.length < 1) { // it shouldn't be needed but managing also
 									// this case is better because we have to be
 									// sure to avoid any exception in runtime
-				snake[0] = new Punto((Punto.xMax - uni) / 2, (Punto.yMax - uni) / 2 - 3 * uni);
+				snake[0] = new Punto(((Punto.xMax - uni) / 2) / uni * uni, ((Punto.yMax - uni) / 2 - 3 * uni) / uni * uni);
 			} else {
 				if (snake[0].getY() - uni == 1)
 					return false;
@@ -195,7 +195,7 @@ public class Body implements Serializable{
 			if (snake.length < 1) { // it shouldn't be needed but managing also
 									// this case is better because we have to be
 									// sure to avoid any exception in runtime
-				snake[0] = new Punto((Punto.xMax - uni) / 2 + 3 * uni, (Punto.yMax - uni) / 2);
+				snake[0] = new Punto(((Punto.xMax - uni) / 2 + 3 * uni) / uni * uni, ((Punto.yMax - uni) / 2) / uni * uni);
 			} else {
 				if (snake[0].getX() - uni == 1)
 					return false;
@@ -207,7 +207,7 @@ public class Body implements Serializable{
 			if (snake.length < 1) { // it shouldn't be needed but managing also
 									// this case is better because we have to be
 									// sure to avoid any exception in runtime
-				snake[0] = new Punto((Punto.xMax - uni) / 2 - 3 * uni, (Punto.yMax - uni) / 2);
+				snake[0] = new Punto(((Punto.xMax - uni) / 2 - 3 * uni) / uni * uni, ((Punto.yMax - uni) / 2) / uni * uni);
 			} else {
 				if (snake[0].getX() + uni == 1)
 					return false;
@@ -227,8 +227,7 @@ public class Body implements Serializable{
 	 * @return
 	 */
 	public boolean collision(Punto apple) {
-		// return collision(apple.getX(), apple.getY());
-		return apple.getX() == snake[0].getX() && apple.getY() == snake[0].getY();
+		 return collision(apple.getX(), apple.getY());
 	}
 
 	/**
@@ -237,10 +236,7 @@ public class Body implements Serializable{
 	 * @return
 	 */
 	public boolean collision(int x, int y) {
-		return (((snake[0].getX() <= x + uni && snake[0].getX() > x)
-				|| (snake[0].getX() + uni <= x + uni && snake[0].getX() + uni > x))
-				&& ((snake[0].getY() >= y && snake[0].getY() < y + uni)
-						|| (snake[0].getY() + uni >= y && snake[0].getY() + uni < y + uni)));
+		return (snake[0].getX() == x && snake[0].getY() == y);
 	}
 
 	public int getUni() {
@@ -251,6 +247,7 @@ public class Body implements Serializable{
 		try {
 			ObjectOutputStream stream = new ObjectOutputStream(new FileOutputStream("snake.bin"));
 			stream.writeObject(this);
+			stream.close();
 			return true;
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
