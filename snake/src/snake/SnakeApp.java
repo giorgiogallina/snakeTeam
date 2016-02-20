@@ -95,7 +95,6 @@ public class SnakeApp {
 		shell.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
-				System.out.println(e.keyCode);
 				switch(e.keyCode){
 				case 115:
 					snk.write();
