@@ -1,6 +1,8 @@
 package snake;
 
-public class Punto {
+import java.io.Serializable;
+
+public class Punto implements Serializable{
 	//*************attributi*******************************************
 	private int x;
 	private int y;
