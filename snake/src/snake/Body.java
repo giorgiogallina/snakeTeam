@@ -12,7 +12,7 @@ import java.util.stream.Stream;
 
 /**
  * 
- * @author Giorgio Gallina
+ * @author Giorgio Gallina & Marco Positello
  *
  */
 public class Body implements Serializable{
@@ -273,5 +273,15 @@ public class Body implements Serializable{
 		} catch (Exception e) {
 			return false;
 		}
+	}
+	
+	private boolean eatYourself(){
+		for(int i = 1; i < snake.length; i++)
+			if(snake[0].equals(snake[i]))
+				return true;
+		return false;
+	}
+	public boolean gameOver(){
+		return snake[0].getX() <= -1 || snake[0].getY() <= -1 || eatYourself();
 	}
 }
