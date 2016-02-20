@@ -1,8 +1,10 @@
 package snake;
 
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Arrays;
@@ -256,6 +258,19 @@ public class Body implements Serializable{
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	public boolean read(){
+		try {
+			ObjectInputStream stream = new ObjectInputStream(new FileInputStream("snake.bin"));
+			Body b = (Body) stream.readObject();
+			snake = b.snake;
+			uni = b.uni; //serve??
+			stream.close();
+			return true;
+		} catch (Exception e) {
 			return false;
 		}
 	}
