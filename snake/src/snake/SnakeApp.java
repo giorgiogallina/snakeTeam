@@ -25,7 +25,7 @@ public class SnakeApp {
 	private char sposta;
 	private int xapple;
 	private int yapple;
-	private boolean flag = false;
+	private boolean flag = false, flag2 = true;;
 	
 	private Random random = new Random();
 
@@ -54,7 +54,7 @@ public class SnakeApp {
 			//if (!display.readAndDispatch()) {
 			//display.sleep();
 		//}
-			while (!display.readAndDispatch() && flag){
+			while (!display.readAndDispatch() && flag && flag2){
 				snk.move(sposta);
 				if(snk.collision(xapple, yapple)){
 					snk.increase(sposta);
@@ -63,6 +63,11 @@ public class SnakeApp {
 					yapple = random.nextInt(canvas.getBounds().height - snk.getUni()) / snk.getUni() * snk.getUni();
 				}
 				draw();
+				if(snk.gameOver()){
+					flag2 = false;
+					GC gc = new GC(canvas);
+					gc.drawText("GAME OVER", (canvas.getBounds().width-9)/2, canvas.getBounds().height/2-1);
+				}
 				try {
 					Thread.sleep(150);
 				} catch (InterruptedException e) {
