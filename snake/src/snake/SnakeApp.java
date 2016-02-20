@@ -12,6 +12,9 @@ import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 
 public class SnakeApp {
 
@@ -61,7 +64,7 @@ public class SnakeApp {
 				}
 				draw();
 				try {
-					Thread.sleep(50);
+					Thread.sleep(150);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -144,6 +147,26 @@ public class SnakeApp {
 		});
 		canvas.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		canvas.setBounds(0, 0, Body.uni * 60, Body.uni * 40);
+		
+		/*Button btnSalva = new Button(shell, SWT.NONE);
+		btnSalva.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				snk.write();
+			}
+		});
+		btnSalva.setBounds(0, 406, 75, 25);
+		btnSalva.setText("Salva");
+		
+		Button btnCarica = new Button(shell, SWT.NONE);
+		btnCarica.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				snk.read();
+			}
+		});
+		btnCarica.setBounds(81, 406, 75, 25);
+		btnCarica.setText("Carica");*/
 
 	}
 }
