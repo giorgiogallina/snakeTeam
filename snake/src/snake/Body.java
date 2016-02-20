@@ -1,13 +1,19 @@
 package snake;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.Arrays;
+import java.util.stream.Stream;
 
 /**
  * 
  * @author Giorgio Gallina
  *
  */
-public class Body {
+public class Body implements Serializable{
 
 	private Punto[] snake;
 	public static int uni = 10;
@@ -239,5 +245,21 @@ public class Body {
 
 	public int getUni() {
 		return uni;
+	}
+	
+	public boolean write(){
+		try {
+			ObjectOutputStream stream = new ObjectOutputStream(new FileOutputStream("snake.bin"));
+			stream.writeObject(this);
+			return true;
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
 	}
 }
