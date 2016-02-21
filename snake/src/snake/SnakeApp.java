@@ -91,6 +91,22 @@ public class SnakeApp {
 			gc.drawOval(snk.getItemCoordinates(i)[0], snk.getItemCoordinates(i)[1], Body.uni, Body.uni);
 		}
 	}
+	
+	private void initialize(){
+		Body.uni = 10;
+		sposta = 'u';
+		Punto.xMax = canvas.getBounds().width;
+		Punto.yMax = canvas.getBounds().height;
+		
+		xapple = canvas.getBounds().width / 2;
+		yapple = canvas.getBounds().height / 2;
+		
+		flag = false;
+		flag2 = true;
+		
+		snk = new Body();
+		draw();
+	}
 
 	/**
 	 * Create contents of the window.
@@ -100,15 +116,21 @@ public class SnakeApp {
 		shell.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
+				System.out.println(e.keyCode);
 				switch(e.keyCode){
 				case 115:
 					snk.write();
 					break;
 				case 108:
 					snk.read();
+					flag = false;
+					draw();
 					break;
 				case 32:
 					flag = !flag;
+					break;
+				case 13:
+					initialize();
 					break;
 				case 16777217:
 					if(sposta != 'd'){ //per evitare l'inversione dello snake
@@ -143,7 +165,7 @@ public class SnakeApp {
 		canvas = new Canvas(shell, SWT.NONE);
 		canvas.addPaintListener(new PaintListener() {
 			public void paintControl(PaintEvent arg0) {
-				Body.uni = 10;
+				/*Body.uni = 10;
 				sposta = 'u';
 				Punto.xMax = canvas.getBounds().width;
 				Punto.yMax = canvas.getBounds().height;
@@ -152,7 +174,8 @@ public class SnakeApp {
 				yapple = canvas.getBounds().height / 2;
 				
 				snk = new Body();
-				draw();
+				draw();*/
+				initialize();
 			}
 		});
 		canvas.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
