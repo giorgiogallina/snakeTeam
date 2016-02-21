@@ -2,6 +2,7 @@ package snake;
 
 import java.util.Random;
 
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
@@ -87,10 +88,17 @@ public class SnakeApp {
 		gc.setBackground(SWTResourceManager.getColor(255,0,0));
 		gc.fillOval(xapple, yapple, Body.uni, Body.uni);
 		gc.drawOval(xapple, yapple, Body.uni, Body.uni);
-		gc.setBackground(SWTResourceManager.getColor(0,255,0));
-		for(int i = 0; i < snk.length(); i++){
-			gc.fillOval(snk.getItemCoordinates(i)[0], snk.getItemCoordinates(i)[1], Body.uni, Body.uni);
-			gc.drawOval(snk.getItemCoordinates(i)[0], snk.getItemCoordinates(i)[1], Body.uni, Body.uni);
+		if(snk != null){
+			if(snk.length() > 0){
+				gc.setBackground(SWTResourceManager.getColor(0,200,100));
+				gc.fillOval(snk.getItemCoordinates(0)[0], snk.getItemCoordinates(0)[1], Body.uni, Body.uni);
+				gc.drawOval(snk.getItemCoordinates(0)[0], snk.getItemCoordinates(0)[1], Body.uni, Body.uni);
+			}
+			gc.setBackground(SWTResourceManager.getColor(0,255,0));
+			for(int i = 1; i < snk.length(); i++){
+				gc.fillOval(snk.getItemCoordinates(i)[0], snk.getItemCoordinates(i)[1], Body.uni, Body.uni);
+				gc.drawOval(snk.getItemCoordinates(i)[0], snk.getItemCoordinates(i)[1], Body.uni, Body.uni);
+			}
 		}
 	}
 	
@@ -119,6 +127,7 @@ public class SnakeApp {
 			@Override
 			public void shellActivated(ShellEvent e) {
 				initialize();
+				//MessageDialog
 			}
 		});
 		shell.addKeyListener(new KeyAdapter() {
