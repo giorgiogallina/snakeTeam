@@ -15,6 +15,8 @@ import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.ShellAdapter;
+import org.eclipse.swt.events.ShellEvent;
 
 public class SnakeApp {
 
@@ -113,6 +115,12 @@ public class SnakeApp {
 	 */
 	protected void createContents() {
 		shell = new Shell();
+		shell.addShellListener(new ShellAdapter() {
+			@Override
+			public void shellActivated(ShellEvent e) {
+				initialize();
+			}
+		});
 		shell.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
@@ -165,17 +173,8 @@ public class SnakeApp {
 		canvas = new Canvas(shell, SWT.NONE);
 		canvas.addPaintListener(new PaintListener() {
 			public void paintControl(PaintEvent arg0) {
-				/*Body.uni = 10;
-				sposta = 'u';
-				Punto.xMax = canvas.getBounds().width;
-				Punto.yMax = canvas.getBounds().height;
-				
-				xapple = canvas.getBounds().width / 2;
-				yapple = canvas.getBounds().height / 2;
-				
-				snk = new Body();
-				draw();*/
-				initialize();
+				//initialize();
+				draw();
 			}
 		});
 		canvas.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
