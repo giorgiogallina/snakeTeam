@@ -24,6 +24,8 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.ShellAdapter;
 import org.eclipse.swt.events.ShellEvent;
+import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.Label;
 
 public class SnakeApp implements Serializable{
 
@@ -38,6 +40,7 @@ public class SnakeApp implements Serializable{
 	private int score;
 	
 	private Random random = new Random();
+	private Text text;
 
 	/**
 	 * Launch the application.
@@ -220,10 +223,10 @@ public class SnakeApp implements Serializable{
 				}
 			}
 		});
-		shell.setSize(678, 533);
+		shell.setSize(635, 480);
 		shell.setText("Games");
 		
-		canvas = new Canvas(shell, SWT.NONE);
+		canvas = new Canvas(shell, SWT.BORDER);
 		canvas.addPaintListener(new PaintListener() {
 			public void paintControl(PaintEvent arg0) {
 				//initialize();
@@ -240,7 +243,15 @@ public class SnakeApp implements Serializable{
 			}
 		});
 		canvas.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
-		canvas.setBounds(0, 0, Body.uni * 60, Body.uni * 40);
+		canvas.setBounds(10, 34, Body.uni * 60, Body.uni * 40);
+		
+		/*
+		text = new Text(shell, SWT.BORDER | SWT.READ_ONLY);
+		text.setBounds(294, 7, 76, 21);
+		
+		Label lblScore = new Label(shell, SWT.NONE);
+		lblScore.setBounds(252, 13, 36, 15);
+		lblScore.setText("Score");*/
 		
 		/*Button btnSalva = new Button(shell, SWT.NONE);
 		btnSalva.addSelectionListener(new SelectionAdapter() {
