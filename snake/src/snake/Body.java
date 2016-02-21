@@ -244,7 +244,7 @@ public class Body implements Serializable{
 	public int getUni() {
 		return uni;
 	}
-	
+	/*
 	public boolean write(){
 		try {
 			ObjectOutputStream stream = new ObjectOutputStream(new FileOutputStream("snake.bin"));
@@ -273,7 +273,7 @@ public class Body implements Serializable{
 		} catch (Exception e) {
 			return false;
 		}
-	}
+	}*/
 	
 	private boolean eatYourself(){
 		for(int i = 1; i < snake.length; i++)

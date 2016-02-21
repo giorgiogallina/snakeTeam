@@ -1,5 +1,11 @@
 package snake;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.Random;
 
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -19,7 +25,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.ShellAdapter;
 import org.eclipse.swt.events.ShellEvent;
 
-public class SnakeApp {
+public class SnakeApp implements Serializable{
 
 	protected Shell shell;
 	private Canvas canvas;
@@ -28,7 +34,8 @@ public class SnakeApp {
 	private char sposta;
 	private int xapple;
 	private int yapple;
-	private boolean flag = false, flag2 = true;;
+	private boolean flag = false, flag2 = true, flag3 = true;
+	private int score;
 	
 	private Random random = new Random();
 
@@ -61,6 +68,7 @@ public class SnakeApp {
 				snk.move(sposta);
 				if(snk.collision(xapple, yapple)){
 					snk.increase(sposta);
+					score += 10;
 					
 					xapple = random.nextInt(canvas.getBounds().width - snk.getUni()) / snk.getUni() * snk.getUni();
 					yapple = random.nextInt(canvas.getBounds().height - snk.getUni()) / snk.getUni() * snk.getUni();
@@ -85,6 +93,7 @@ public class SnakeApp {
 		GC gc = new GC(canvas);
 		gc.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		gc.fillRectangle(0, 0, canvas.getBounds().width, canvas.getBounds().height);
+		gc.drawText(score+"", canvas.getBounds().width-50, 0);
 		gc.setBackground(SWTResourceManager.getColor(255,0,0));
 		gc.fillOval(xapple, yapple, Body.uni, Body.uni);
 		gc.drawOval(xapple, yapple, Body.uni, Body.uni);
@@ -114,8 +123,37 @@ public class SnakeApp {
 		flag = false;
 		flag2 = true;
 		
+		score = 0;
+		
 		snk = new Body();
 		draw();
+	}
+	
+	private boolean write(){
+		try {
+			ObjectOutputStream stream = new ObjectOutputStream(new FileOutputStream("snake2.bin"));
+			stream.writeObject(snk);
+			stream.writeObject(sposta);
+			stream.writeObject(score);
+			stream.close();
+			return true;
+		} catch (Exception e1) {
+			return false;
+		}
+	}
+	
+	private boolean read(){
+		try {
+			ObjectInputStream stream = new ObjectInputStream(new FileInputStream("snake2.bin"));
+			snk = (Body) stream.readObject();
+			sposta = (char) stream.readObject();
+			score = (int) stream.readObject();
+			flag = false;
+			stream.close();
+			return true;
+		} catch (Exception e1) {
+			return false;
+		}
 	}
 
 	/**
@@ -127,20 +165,26 @@ public class SnakeApp {
 			@Override
 			public void shellActivated(ShellEvent e) {
 				initialize();
-				//MessageDialog
+				/*MessageDialog.openInformation(shell, "Instruction",
+						"press the arrow keys to move\n"
+						+ "press the space bar to stop the game\n"
+						+ "press enter to restart\n"
+						+ "press 1 or S to save the game\n"
+						+ "press 2 or L to start the saved game");*/
 			}
 		});
 		shell.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
-				System.out.println(e.keyCode);
+				//System.out.println(e.keyCode);
 				switch(e.keyCode){
-				case 115:
-					snk.write();
+				case 115: case 16777265: case 49: case 119:
+					//snk.write();
+					write();
 					break;
-				case 108:
-					snk.read();
-					flag = false;
+				case 108: case 16777266: case 50: case 114:
+					//snk.read();
+					read();
 					draw();
 					break;
 				case 32:
@@ -184,6 +228,15 @@ public class SnakeApp {
 			public void paintControl(PaintEvent arg0) {
 				//initialize();
 				draw();
+				if(flag3){
+					flag3 = false;
+					MessageDialog.openInformation(shell, "Instruction",
+							"press the arrow keys to move\n"
+									+ "press the space bar to stop the game\n"
+									+ "press enter to restart\n"
+									+ "press 1 or S to save the game\n"
+									+ "press 2 or L to start the saved game");
+				}
 			}
 		});
 		canvas.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
