@@ -38,6 +38,7 @@ public class SnakeApp implements Serializable{
 	private int yapple;
 	private boolean flag = false, flag2 = true, flag3 = true;
 	private int score;
+	private int speed;
 	
 	private Random random = new Random();
 	private Text text;
@@ -72,6 +73,9 @@ public class SnakeApp implements Serializable{
 				if(snk.collision(xapple, yapple)){
 					snk.increase(sposta);
 					score += 10;
+					if(score % 5 == 0 && speed >= 50){
+						speed -= 5;
+					}
 					
 					xapple = random.nextInt(canvas.getBounds().width - snk.getUni()) / snk.getUni() * snk.getUni();
 					yapple = random.nextInt(canvas.getBounds().height - snk.getUni()) / snk.getUni() * snk.getUni();
@@ -83,7 +87,7 @@ public class SnakeApp implements Serializable{
 					gc.drawText("GAME OVER", (canvas.getBounds().width-9)/2, canvas.getBounds().height/2-1);
 				}
 				try {
-					Thread.sleep(150);
+					Thread.sleep(speed);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -127,6 +131,7 @@ public class SnakeApp implements Serializable{
 		flag2 = true;
 		
 		score = 0;
+		speed = 200;
 		
 		snk = new Body();
 		draw();
