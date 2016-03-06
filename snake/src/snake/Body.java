@@ -1,14 +1,8 @@
 package snake;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.util.Arrays;
-import java.util.stream.Stream;
+import java.util.Iterator;
+import java.util.LinkedList;
 
 /**
  * 
@@ -16,8 +10,8 @@ import java.util.stream.Stream;
  *
  */
 public class Body implements Serializable{
-
-	private Punto[] snake;
+		
+	private LinkedList<Punto> snake;
 	public static int uni = 10;
 
 	/**
@@ -25,20 +19,9 @@ public class Body implements Serializable{
 	 * upright toward the top of the shell
 	 */
 	public Body() {
-		snake = new Punto[0];
+		snake = new LinkedList<Punto>();
 		for (int i = 0; i < 4; i++) {
 			increase('U');
-		}
-	}
-
-	/**
-	 * shift the array's elements to the left: the last element is lost whereas
-	 * the first appears twice (in the first and in the second position of the
-	 * array).
-	 */
-	private void shiftRight() {
-		for (int i = snake.length - 1; i > 0; i--) {
-			snake[i] = snake[i - 1];
 		}
 	}
 
@@ -53,10 +36,13 @@ public class Body implements Serializable{
 	private boolean add(Punto p) {
 		if (p == null)
 			return false;
-		if (snake.length == 0 || !p.equals(snake[snake.length - 1])) {
-			snake = Arrays.copyOf(snake, snake.length + 1);
-			shiftRight();
-			snake[0] = new Punto(p);
+		Iterator<Punto> i = snake.iterator();
+		Punto punto = new Punto();
+		while(i.hasNext()){
+			punto = i.next();
+		}
+		if (snake.isEmpty() || !p.equals(punto)) {
+			snake.addFirst(p);
 			return true;
 		}
 		return false;
@@ -77,40 +63,40 @@ public class Body implements Serializable{
 		switch (direction) {
 		case 'd':
 		case 'D': // down
-			if (snake.length < 1) { // it shouldn't be needed but managing also
+			if (snake.size() < 1) { // it shouldn't be needed but managing also
 									// this case is better because we have to be
 									// sure to avoid any exception in runtime
 				head = new Punto((Punto.xMax - uni) / 2, (Punto.yMax - uni) / 2 + 3 * uni);
 			} else {
-				head = new Punto(snake[0].getX(), snake[0].getY() + uni);
+				head = new Punto(snake.get(0).getX(), snake.get(0).getY() + uni);
 			}
 			break;
 		case 'u':
 		case 'U': // up
-			if (snake.length < 1) {
+			if (snake.size() < 1) {
 				head = new Punto(((Punto.xMax - uni) / 2) / uni * uni, ((Punto.yMax - uni) / 2 - 3 * uni) / uni * uni);
 			} else {
-				head = new Punto(snake[0].getX(), snake[0].getY() - uni);
+				head = new Punto(snake.get(0).getX(), snake.get(0).getY() - uni);
 			}
 			break;
 		case 'l':
 		case 'L': // left
-			if (snake.length < 1) { // it shouldn't be needed but managing also
+			if (snake.size() < 1) { // it shouldn't be needed but managing also
 									// this case is better because we have to be
 									// sure to avoid any exception in runtime
 				head = new Punto((Punto.xMax - uni) / 2 + 3 * uni, (Punto.yMax - uni) / 2);
 			} else {
-				head = new Punto(snake[0].getX() - uni, snake[0].getY());
+				head = new Punto(snake.get(0).getX() - uni, snake.get(0).getY());
 			}
 			break;
 		case 'r':
 		case 'R':
-			if (snake.length < 1) { // it shouldn't be needed but managing also
+			if (snake.size() < 1) { // it shouldn't be needed but managing also
 									// this case is better because we have to be
 									// sure to avoid any exception in runtime
 				head = new Punto((Punto.xMax - uni) / 2 - 3 * uni, (Punto.yMax - uni) / 2);
 			} else {
-				head = new Punto(snake[0].getX() + uni, snake[0].getY());
+				head = new Punto(snake.get(0).getX() + uni, snake.get(0).getY());
 			}
 			break;
 		default:
@@ -127,9 +113,9 @@ public class Body implements Serializable{
 	 * @return an object of the class Punto.
 	 */
 	public Punto getItem(int index) {
-		if (index < 0 || index >= snake.length)
+		if (index < 0 || index >= snake.size())
 			return null;
-		return new Punto(snake[index]);
+		return new Punto(snake.get(index));
 	}
 
 	/**
@@ -141,9 +127,9 @@ public class Body implements Serializable{
 	 *         and coordinate y.
 	 */
 	public int[] getItemCoordinates(int index) {
-		if (index < 0 || index >= snake.length)
+		if (index < 0 || index >= snake.size())
 			return null;
-		return new int[] { snake[index].getX(), snake[index].getY() };
+		return new int[] { snake.get(index).getX(), snake.get(index).getY() };
 	}
 
 	/**
@@ -152,7 +138,7 @@ public class Body implements Serializable{
 	 * @return the array's length
 	 */
 	public int length() {
-		return snake.length;
+		return snake.size();
 	}
 
 	/**
@@ -165,55 +151,59 @@ public class Body implements Serializable{
 	 *         the array, otherwise it returns false.
 	 */
 	public boolean move(char direction) {
-		Punto[] backup = Arrays.copyOf(snake, snake.length);
-		shiftRight();
+		LinkedList<Punto> backup = new LinkedList<Punto>();
+		Iterator<Punto> i = snake.iterator();
+		while(i.hasNext()){
+			backup.add((i.next()).clone());
+		}
+		snake.removeLast();
 		switch (direction) {
 		case 'd':
 		case 'D': // down
-			if (snake.length < 1) { // it shouldn't be needed but managing also
+			if (snake.size() < 1) { // it shouldn't be needed but managing also
 									// this case is better because we have to be
 									// sure to avoid any exception in runtime
-				snake[0] = new Punto(((Punto.xMax - uni) / 2) / uni * uni, ((Punto.yMax - uni) / 2 + 3 * uni) / uni * uni);
+				snake.set(0, new Punto(((Punto.xMax - uni) / 2) / uni * uni, ((Punto.yMax - uni) / 2 + 3 * uni) / uni * uni));
 			} else {
-				if (snake[0].getY() + uni == 1)
+				if (snake.getFirst().getY() + uni == 1)
 					return false;
-				snake[0] = new Punto(snake[0].getX(), snake[0].getY() + uni);
+				snake.addFirst(new Punto(snake.getFirst().getX(), snake.getFirst().getY() + uni));
 			}
 			break;
 		case 'u':
 		case 'U': // up
-			if (snake.length < 1) { // it shouldn't be needed but managing also
+			if (snake.size() < 1) { // it shouldn't be needed but managing also
 									// this case is better because we have to be
 									// sure to avoid any exception in runtime
-				snake[0] = new Punto(((Punto.xMax - uni) / 2) / uni * uni, ((Punto.yMax - uni) / 2 - 3 * uni) / uni * uni);
+				snake.set(0, new Punto(((Punto.xMax - uni) / 2) / uni * uni, ((Punto.yMax - uni) / 2 - 3 * uni) / uni * uni));
 			} else {
-				if (snake[0].getY() - uni == 1)
+				if (snake.getFirst().getY() - uni == 1)
 					return false;
-				snake[0] = new Punto(snake[0].getX(), snake[0].getY() - uni);
+				snake.addFirst(new Punto(snake.getFirst().getX(), snake.getFirst().getY() - uni));
 			}
 			break;
 		case 'l':
 		case 'L': // left
-			if (snake.length < 1) { // it shouldn't be needed but managing also
+			if (snake.size() < 1) { // it shouldn't be needed but managing also
 									// this case is better because we have to be
 									// sure to avoid any exception in runtime
-				snake[0] = new Punto(((Punto.xMax - uni) / 2 + 3 * uni) / uni * uni, ((Punto.yMax - uni) / 2) / uni * uni);
+				snake.set(0, new Punto(((Punto.xMax - uni) / 2 + 3 * uni) / uni * uni, ((Punto.yMax - uni) / 2) / uni * uni));
 			} else {
-				if (snake[0].getX() - uni == 1)
+				if (snake.getFirst().getX() - uni == 1)
 					return false;
-				snake[0] = new Punto(snake[0].getX() - uni, snake[0].getY());
+				snake.addFirst(new Punto(snake.getFirst().getX() - uni, snake.getFirst().getY()));
 			}
 			break;
 		case 'r':
 		case 'R':
-			if (snake.length < 1) { // it shouldn't be needed but managing also
+			if (snake.size() < 1) { // it shouldn't be needed but managing also
 									// this case is better because we have to be
 									// sure to avoid any exception in runtime
-				snake[0] = new Punto(((Punto.xMax - uni) / 2 - 3 * uni) / uni * uni, ((Punto.yMax - uni) / 2) / uni * uni);
+				snake.set(0, new Punto(((Punto.xMax - uni) / 2 - 3 * uni) / uni * uni, ((Punto.yMax - uni) / 2) / uni * uni));
 			} else {
-				if (snake[0].getX() + uni == 1)
+				if (snake.getFirst().getX() + uni == 1)
 					return false;
-				snake[0] = new Punto(snake[0].getX() + uni, snake[0].getY());
+				snake.addFirst(new Punto(snake.getFirst().getX() + uni, snake.getFirst().getY()));
 			}
 			break;
 		default:
@@ -238,7 +228,7 @@ public class Body implements Serializable{
 	 * @return
 	 */
 	public boolean collision(int x, int y) {
-		return (snake[0].getX() == x && snake[0].getY() == y);
+		return (snake.getFirst().getX() == x && snake.getFirst().getY() == y);
 	}
 
 	public int getUni() {
@@ -276,12 +266,12 @@ public class Body implements Serializable{
 	}*/
 	
 	private boolean eatYourself(){
-		for(int i = 1; i < snake.length; i++)
-			if(snake[0].equals(snake[i]))
+		for(int i = 1; i < snake.size(); i++)
+			if(snake.getFirst().equals(snake.get(i)))
 				return true;
 		return false;
 	}
 	public boolean gameOver(){
-		return snake[0].getX() <= -1 || snake[0].getY() <= -1 || eatYourself();
+		return snake.getFirst().getX() <= -1 || snake.getFirst().getY() <= -1 || eatYourself();
 	}
 }

@@ -139,6 +139,8 @@ public class Punto implements Serializable{
 		return x == p.x && y == p.y;
 	}
 
-	
+	public Punto clone(){
+		return new Punto(this);
+	}
 		
 }
