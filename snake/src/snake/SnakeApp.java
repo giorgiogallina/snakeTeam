@@ -31,12 +31,13 @@ public class SnakeApp implements Serializable{
 
 	protected Shell shell;
 	private Canvas canvas;
+	private GC gc;
 	
 	private Body snk;
-	private char sposta;
+	private char sposta, sp2 = 'k';
 	private int xapple;
 	private int yapple;
-	private boolean flag = false, flag2 = true, flag3 = true;
+	private boolean flag = false, flag2 = true, flag3 = true, chkMove = true;;
 	private int score;
 	private int speed;
 	
@@ -70,6 +71,11 @@ public class SnakeApp implements Serializable{
 		//}
 			while (!display.readAndDispatch() && flag && flag2){
 				snk.move(sposta);
+				chkMove = true;
+				if(sp2 != 'k'){
+					sposta = sp2;
+					sp2 = 'k';
+				}
 				if(snk.collision(xapple, yapple)){
 					snk.increase(sposta);
 					score += 10;
@@ -97,7 +103,7 @@ public class SnakeApp implements Serializable{
 	}
 	
 	private void draw(){
-		GC gc = new GC(canvas);
+		
 		gc.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		gc.fillRectangle(0, 0, canvas.getBounds().width, canvas.getBounds().height);
 		gc.drawText(score+"", canvas.getBounds().width-50, 0);
@@ -203,26 +209,46 @@ public class SnakeApp implements Serializable{
 					break;
 				case 16777217:
 					if(sposta != 'd'){ //per evitare l'inversione dello snake
-						sposta = 'u';
-						flag = true;
+						if(chkMove){
+							sposta = 'u';
+							flag = true;
+							chkMove = false;
+						}else{
+							sp2 = 'u';
+						}
 					}
 					break;
 				case 16777218:
 					if(sposta != 'u'){
-						sposta = 'd';
-						flag = true;
+						if(chkMove){
+							sposta = 'd';
+							flag = true;
+							chkMove = false;
+						}else{
+							sp2 = 'd';
+						}
 					}
 					break;
 				case 16777219:
 					if(sposta != 'r'){
-						sposta = 'l';
-						flag = true;
+						if(chkMove){
+							sposta = 'l';
+							flag = true;
+							chkMove = false;
+						}else{
+							sp2 = 'l';
+						}
 					}
 					break;
 				case 16777220:
 					if(sposta != 'l'){
-						sposta = 'r';
-						flag = true;
+						if(chkMove){
+							sposta = 'r';
+							flag = true;
+							chkMove = false;
+						}else{
+							sp2 = 'r';
+						}
 					}
 					break;
 				}
@@ -246,9 +272,13 @@ public class SnakeApp implements Serializable{
 									+ "press 2 or L to start the saved game");
 				}
 			}
+			
 		});
 		canvas.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		canvas.setBounds(10, 34, Body.uni * 60, Body.uni * 40);
+		
+
+		gc = new GC(canvas);
 		
 		/*
 		text = new Text(shell, SWT.BORDER | SWT.READ_ONLY);
