@@ -39,6 +39,18 @@ public class Punto implements Serializable{
 			this.x = x;
 		 */
 	}
+	public void setX(int x, boolean rientro) {
+		if(x >= xmin && x <= xMax-Body.uni)
+			this.x = x;
+		else if(!rientro){
+			this.x = -1;
+		}else{
+			if(x < xmin)
+				this.x = xMax-Body.uni;
+			else
+				this.x = 0;
+		}
+	}
 	/**
 	 * 
 	 * @return Ritorna il valore dell'ordinata
@@ -54,6 +66,18 @@ public class Punto implements Serializable{
 		if(y >= ymin && y <= yMax-Body.uni)
 			this.y = y;
 		else{
+			this.y = -1;
+		}
+	}
+	public void setY(int y, boolean rientro) {
+		if(y >= ymin && y <= yMax-Body.uni)
+			this.y = y;
+		else if(rientro){
+			if(y < ymin)
+				this.y = yMax-Body.uni;
+			else
+				this.y = 0;
+		}else{
 			this.y = -1;
 		}
 	}
@@ -87,6 +111,10 @@ public class Punto implements Serializable{
 	public Punto (int x, int y){
 		setX(x);
 		setY(y);
+	}
+	public Punto (int x, int y, boolean rientro){
+		setX(x, rientro);
+		setY(y, rientro);
 	}
 	
 	

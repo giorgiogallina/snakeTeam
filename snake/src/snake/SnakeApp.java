@@ -15,6 +15,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.wb.swt.SWTResourceManager;
 import org.eclipse.swt.events.PaintListener;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.KeyAdapter;
@@ -37,7 +38,7 @@ public class SnakeApp implements Serializable{
 	private char sposta, sp2 = 'k';
 	private int xapple;
 	private int yapple;
-	private boolean flag = false, flag2 = true, flag3 = true, chkMove = true;
+	private boolean flag = false, flag2 = true, flag3 = true, chkMove = true, level1 = false;
 		//flag is for having a break
 		//flag2 is to forbid players to keep playing after having lost the game
 		//flag3 is to show rules only once at the beginning of the game
@@ -83,13 +84,26 @@ public class SnakeApp implements Serializable{
 				if(snk.collision(xapple, yapple)){
 					snk.increase(sposta);
 					score += 10;
-					if(score % 5 == 0 && speed >= 50){
+					if(score % 5 == 0 && speed >= 75){
 						speed -= 5;
 					}
 					do{
 						xapple = random.nextInt(canvas.getBounds().width - snk.getUni()) / snk.getUni() * snk.getUni();
 						yapple = random.nextInt(canvas.getBounds().height - snk.getUni()) / snk.getUni() * snk.getUni();
 					}while(snk.inBody(new Punto(xapple, yapple)));
+					if(score == (Body.level-4)*10){
+						level1 = true;
+						gc.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+						gc.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
+						gc.setFont(new Font(null, "Candara", 22, 1));
+						gc.drawText("LEVEL 1", canvas.getBounds().width/2-50, canvas.getBounds().height/2-30, 1);
+						gc.drawRectangle(0, 0, canvas.getBounds().width-1, canvas.getBounds().height-1);
+						try {
+							Thread.sleep(1500);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+					}
 				}
 				draw();
 				if(snk.gameOver()){
@@ -110,7 +124,10 @@ public class SnakeApp implements Serializable{
 		
 		gc.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		gc.fillRectangle(0, 0, canvas.getBounds().width, canvas.getBounds().height);
-		gc.drawText(score+"", canvas.getBounds().width-50, 0);
+		if(level1)
+			gc.drawRectangle(0, 0, canvas.getBounds().width-1, canvas.getBounds().height-1);
+		gc.setFont(new Font(null, "Candara", 13, 1));
+		gc.drawText("Score: "+score+"", canvas.getBounds().width-100, 1);
 		gc.setBackground(SWTResourceManager.getColor(255,0,0));
 		gc.fillOval(xapple, yapple, Body.uni, Body.uni);
 		gc.drawOval(xapple, yapple, Body.uni, Body.uni);
@@ -141,7 +158,7 @@ public class SnakeApp implements Serializable{
 		flag2 = true;
 		
 		score = 0;
-		speed = 200;
+		speed = 190;
 		
 		snk = new Body();
 		draw();
@@ -263,7 +280,7 @@ public class SnakeApp implements Serializable{
 		shell.setSize(635, 480);
 		shell.setText("Games");
 		
-		canvas = new Canvas(shell, SWT.BORDER);
+		canvas = new Canvas(shell, SWT.NONE);
 		canvas.addPaintListener(new PaintListener() {
 			public void paintControl(PaintEvent arg0) {
 				//initialize();

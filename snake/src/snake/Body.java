@@ -13,6 +13,7 @@ public class Body implements Serializable{
 		
 	private LinkedList<Punto> snake;
 	public static int uni = 10;
+	public static int level = 18;
 
 	/**
 	 * default constructor of this class: it creates a new snake sized four set
@@ -36,12 +37,7 @@ public class Body implements Serializable{
 	private boolean add(Punto p) {
 		if (p == null)
 			return false;
-		Iterator<Punto> i = snake.iterator();
-		Punto punto = new Punto();
-		while(i.hasNext()){
-			punto = i.next();
-		}
-		if (snake.isEmpty() || !p.equals(punto)) {
+		if (snake.isEmpty() || !p.equals(snake.getFirst())) {
 			snake.addFirst(p);
 			return true;
 		}
@@ -68,7 +64,7 @@ public class Body implements Serializable{
 									// sure to avoid any exception in runtime
 				head = new Punto((Punto.xMax - uni) / 2, (Punto.yMax - uni) / 2 + 3 * uni);
 			} else {
-				head = new Punto(snake.get(0).getX(), snake.get(0).getY() + uni);
+				head = new Punto(snake.get(0).getX(), snake.get(0).getY() + uni, snake.size()<level);
 			}
 			break;
 		case 'u':
@@ -76,7 +72,7 @@ public class Body implements Serializable{
 			if (snake.size() < 1) {
 				head = new Punto(((Punto.xMax - uni) / 2) / uni * uni, ((Punto.yMax - uni) / 2 - 3 * uni) / uni * uni);
 			} else {
-				head = new Punto(snake.get(0).getX(), snake.get(0).getY() - uni);
+				head = new Punto(snake.get(0).getX(), snake.get(0).getY() - uni, snake.size()<level);
 			}
 			break;
 		case 'l':
@@ -86,7 +82,7 @@ public class Body implements Serializable{
 									// sure to avoid any exception in runtime
 				head = new Punto((Punto.xMax - uni) / 2 + 3 * uni, (Punto.yMax - uni) / 2);
 			} else {
-				head = new Punto(snake.get(0).getX() - uni, snake.get(0).getY());
+				head = new Punto(snake.get(0).getX() - uni, snake.get(0).getY(), snake.size()<level);
 			}
 			break;
 		case 'r':
@@ -96,7 +92,7 @@ public class Body implements Serializable{
 									// sure to avoid any exception in runtime
 				head = new Punto((Punto.xMax - uni) / 2 - 3 * uni, (Punto.yMax - uni) / 2);
 			} else {
-				head = new Punto(snake.get(0).getX() + uni, snake.get(0).getY());
+				head = new Punto(snake.get(0).getX() + uni, snake.get(0).getY(), snake.size()<level);
 			}
 			break;
 		default:
@@ -167,7 +163,7 @@ public class Body implements Serializable{
 			} else {
 				if (snake.getFirst().getY() + uni == 1)
 					return false;
-				snake.addFirst(new Punto(snake.getFirst().getX(), snake.getFirst().getY() + uni));
+				snake.addFirst(new Punto(snake.getFirst().getX(), snake.getFirst().getY() + uni, snake.size()<level));
 			}
 			break;
 		case 'u':
@@ -179,7 +175,7 @@ public class Body implements Serializable{
 			} else {
 				if (snake.getFirst().getY() - uni == 1)
 					return false;
-				snake.addFirst(new Punto(snake.getFirst().getX(), snake.getFirst().getY() - uni));
+				snake.addFirst(new Punto(snake.getFirst().getX(), snake.getFirst().getY() - uni, snake.size()<level));
 			}
 			break;
 		case 'l':
@@ -191,7 +187,7 @@ public class Body implements Serializable{
 			} else {
 				if (snake.getFirst().getX() - uni == 1)
 					return false;
-				snake.addFirst(new Punto(snake.getFirst().getX() - uni, snake.getFirst().getY()));
+				snake.addFirst(new Punto(snake.getFirst().getX() - uni, snake.getFirst().getY(), snake.size()<level));
 			}
 			break;
 		case 'r':
@@ -203,7 +199,7 @@ public class Body implements Serializable{
 			} else {
 				if (snake.getFirst().getX() + uni == 1)
 					return false;
-				snake.addFirst(new Punto(snake.getFirst().getX() + uni, snake.getFirst().getY()));
+				snake.addFirst(new Punto(snake.getFirst().getX() + uni, snake.getFirst().getY(), snake.size()<level));
 			}
 			break;
 		default:
@@ -266,10 +262,6 @@ public class Body implements Serializable{
 	}*/
 	
 	private boolean eatYourself(){
-		/*for(int i = 1; i < snake.size(); i++)
-			if(snake.getFirst().equals(snake.get(i)))
-				return true;
-		return false;*/
 		return inBody(snake.getFirst());
 	}
 	public boolean inBody(Punto p){
