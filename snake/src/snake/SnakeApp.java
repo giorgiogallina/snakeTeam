@@ -37,7 +37,11 @@ public class SnakeApp implements Serializable{
 	private char sposta, sp2 = 'k';
 	private int xapple;
 	private int yapple;
-	private boolean flag = false, flag2 = true, flag3 = true, chkMove = true;;
+	private boolean flag = false, flag2 = true, flag3 = true, chkMove = true;
+		//flag is for having a break
+		//flag2 is to forbid players to keep playing after having lost the game
+		//flag3 is to show rules only once at the beginning of the game
+		//chkMove is used to avoid problems when pressing two keys too quickly
 	private int score;
 	private int speed;
 	
@@ -95,7 +99,6 @@ public class SnakeApp implements Serializable{
 				try {
 					Thread.sleep(speed);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -149,6 +152,7 @@ public class SnakeApp implements Serializable{
 			stream.writeObject(snk);
 			stream.writeObject(sposta);
 			stream.writeObject(score);
+			stream.writeObject(speed);
 			stream.close();
 			return true;
 		} catch (Exception e1) {
@@ -162,6 +166,7 @@ public class SnakeApp implements Serializable{
 			snk = (Body) stream.readObject();
 			sposta = (char) stream.readObject();
 			score = (int) stream.readObject();
+			speed = (int) stream.readObject();
 			flag = false;
 			stream.close();
 			return true;
@@ -201,17 +206,17 @@ public class SnakeApp implements Serializable{
 					read();
 					draw();
 					break;
-				case 32:
+				case 32:	//space
 					flag = !flag;
 					break;
-				case 13:
+				case 13:	//enter
 					initialize();
 					break;
 				case 16777217:
 					if(sposta != 'd'){ //per evitare l'inversione dello snake
+						flag = true;
 						if(chkMove){
 							sposta = 'u';
-							flag = true;
 							chkMove = false;
 						}else{
 							sp2 = 'u';
@@ -220,9 +225,9 @@ public class SnakeApp implements Serializable{
 					break;
 				case 16777218:
 					if(sposta != 'u'){
+						flag = true;
 						if(chkMove){
 							sposta = 'd';
-							flag = true;
 							chkMove = false;
 						}else{
 							sp2 = 'd';
@@ -231,9 +236,9 @@ public class SnakeApp implements Serializable{
 					break;
 				case 16777219:
 					if(sposta != 'r'){
+						flag = true;
 						if(chkMove){
 							sposta = 'l';
-							flag = true;
 							chkMove = false;
 						}else{
 							sp2 = 'l';
@@ -242,9 +247,9 @@ public class SnakeApp implements Serializable{
 					break;
 				case 16777220:
 					if(sposta != 'l'){
+						flag = true;
 						if(chkMove){
 							sposta = 'r';
-							flag = true;
 							chkMove = false;
 						}else{
 							sp2 = 'r';
