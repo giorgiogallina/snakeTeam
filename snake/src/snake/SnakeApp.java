@@ -86,9 +86,10 @@ public class SnakeApp implements Serializable{
 					if(score % 5 == 0 && speed >= 50){
 						speed -= 5;
 					}
-					
-					xapple = random.nextInt(canvas.getBounds().width - snk.getUni()) / snk.getUni() * snk.getUni();
-					yapple = random.nextInt(canvas.getBounds().height - snk.getUni()) / snk.getUni() * snk.getUni();
+					do{
+						xapple = random.nextInt(canvas.getBounds().width - snk.getUni()) / snk.getUni() * snk.getUni();
+						yapple = random.nextInt(canvas.getBounds().height - snk.getUni()) / snk.getUni() * snk.getUni();
+					}while(snk.inBody(new Punto(xapple, yapple)));
 				}
 				draw();
 				if(snk.gameOver()){

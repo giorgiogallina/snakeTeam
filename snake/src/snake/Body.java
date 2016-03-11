@@ -266,8 +266,15 @@ public class Body implements Serializable{
 	}*/
 	
 	private boolean eatYourself(){
-		for(int i = 1; i < snake.size(); i++)
+		/*for(int i = 1; i < snake.size(); i++)
 			if(snake.getFirst().equals(snake.get(i)))
+				return true;
+		return false;*/
+		return inBody(snake.getFirst());
+	}
+	public boolean inBody(Punto p){
+		for(int i = 1; i < snake.size(); i++)
+			if(p.equals(snake.get(i)))
 				return true;
 		return false;
 	}
