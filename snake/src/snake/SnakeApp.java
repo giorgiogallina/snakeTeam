@@ -10,6 +10,7 @@ import java.util.Random;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.LineStyleEvent;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Canvas;
@@ -35,6 +36,7 @@ public class SnakeApp implements Serializable{
 	private GC gc;
 	
 	private Body snk;
+	private Body hurdle, hurdle2, movingHurdle;
 	private char sposta, sp2 = 'k';
 	private int xapple;
 	private int yapple;
@@ -85,16 +87,30 @@ public class SnakeApp implements Serializable{
 				if(snk.collision(xapple, yapple)){
 					snk.increase(sposta);
 					score += 10;
-					if(score % 5 == 0 && speed >= 75){
-						speed -= 5;
+					if(score % 50 == 0 && speed >= 75){
+						speed -= 15;
 					}
 					System.out.println(speed);
 					do{
 						xapple = random.nextInt(canvas.getBounds().width - snk.getUni()) / snk.getUni() * snk.getUni();
 						yapple = random.nextInt(canvas.getBounds().height - snk.getUni()) / snk.getUni() * snk.getUni();
-					}while(snk.inBody(new Punto(xapple, yapple)));
-					if(score == (Body.level-3)*10){
+					}while(snk.inBody(new Punto(xapple, yapple)) ||
+							(hurdle != null && (hurdle.inBody(new Punto(xapple, yapple)) || hurdle.getItem(0).equals(new Punto(xapple, yapple)))) ||
+							(hurdle2 != null && (hurdle2.inBody(new Punto(xapple, yapple)) || hurdle2.getItem(0).equals(new Punto(xapple, yapple)))) );
+					if(score % ((Body.level-3)*10) == 0){
 						level++;
+						
+						switch(level){
+						case 1:
+							break;
+						case 2:
+							hurdleInitialiser();
+							hurdle2Initialiser();
+							break;
+						default:
+							break;
+						}
+						
 						gc.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 						gc.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
 						gc.setFont(new Font(null, "Candara", 22, 1));
@@ -145,6 +161,15 @@ public class SnakeApp implements Serializable{
 				gc.drawOval(snk.getItemCoordinates(i)[0], snk.getItemCoordinates(i)[1], Body.uni, Body.uni);
 			}
 		}
+		if(hurdle != null && hurdle2 != null){
+			gc.setBackground(SWTResourceManager.getColor(0,0,255));
+			for(int i = 0; i < hurdle.length(); i++){
+				gc.fillRectangle(hurdle.getItemCoordinates(i)[0], hurdle.getItemCoordinates(i)[1], Body.uni, Body.uni);
+				gc.drawRectangle(hurdle.getItemCoordinates(i)[0], hurdle.getItemCoordinates(i)[1], Body.uni, Body.uni);
+				gc.fillRectangle(hurdle2.getItemCoordinates(i)[0], hurdle2.getItemCoordinates(i)[1], Body.uni, Body.uni);
+				gc.drawRectangle(hurdle2.getItemCoordinates(i)[0], hurdle2.getItemCoordinates(i)[1], Body.uni, Body.uni);
+			}
+		}
 	}
 	
 	private void initialize(){
@@ -164,13 +189,43 @@ public class SnakeApp implements Serializable{
 		level = 0;
 		
 		snk = new Body();
+		hurdle = null;
 		draw();
+	}
+	
+	private void hurdleInitialiser(){
+		hurdle = new Body();
+		for(int i = 0; i < 4; i++)
+			hurdle.move('l');
+		for(int i = 0; i < 6; i++)
+			hurdle.increase('l');
+		hurdle.increase('d');
+		for(int i = 0; i < 20; i++)
+			hurdle.increase('r');
+		hurdle.increase('u');
+		for(int i = 0; i < 10; i++)
+			hurdle.increase('l');
+	}
+	private void hurdle2Initialiser(){
+		hurdle2 = new Body();
+		for(int i = 0; i < 4; i++)
+			hurdle2.move('l');
+		for(int i = 0; i < 10; i++)
+			hurdle2.increase('d');
+		for(int i = 0; i < 6; i++)
+			hurdle2.increase('l');
+		for(int i = 0; i < 20; i++)
+			hurdle2.increase('r');
+		hurdle2.increase('u');
+		for(int i = 0; i < 20; i++)
+			hurdle2.increase('l');
 	}
 	
 	private boolean write(){
 		try {
 			ObjectOutputStream stream = new ObjectOutputStream(new FileOutputStream("snake2.bin"));
 			stream.writeObject(snk);
+			stream.writeObject(hurdle);
 			stream.writeObject(sposta);
 			stream.writeObject(score);
 			stream.writeObject(speed);
@@ -186,6 +241,7 @@ public class SnakeApp implements Serializable{
 		try {
 			ObjectInputStream stream = new ObjectInputStream(new FileInputStream("snake2.bin"));
 			snk = (Body) stream.readObject();
+			hurdle = (Body) stream.readObject();
 			sposta = (char) stream.readObject();
 			score = (int) stream.readObject();
 			speed = (int) stream.readObject();
