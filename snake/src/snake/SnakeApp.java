@@ -38,7 +38,8 @@ public class SnakeApp implements Serializable{
 	private char sposta, sp2 = 'k';
 	private int xapple;
 	private int yapple;
-	private boolean flag = false, flag2 = true, flag3 = true, chkMove = true, level1 = false;
+	private int level = 0;
+	private boolean flag = false, flag2 = true, flag3 = true, chkMove = true;
 		//flag is for having a break
 		//flag2 is to forbid players to keep playing after having lost the game
 		//flag3 is to show rules only once at the beginning of the game
@@ -87,16 +88,17 @@ public class SnakeApp implements Serializable{
 					if(score % 5 == 0 && speed >= 75){
 						speed -= 5;
 					}
+					System.out.println(speed);
 					do{
 						xapple = random.nextInt(canvas.getBounds().width - snk.getUni()) / snk.getUni() * snk.getUni();
 						yapple = random.nextInt(canvas.getBounds().height - snk.getUni()) / snk.getUni() * snk.getUni();
 					}while(snk.inBody(new Punto(xapple, yapple)));
-					if(score == (Body.level-4)*10){
-						level1 = true;
+					if(score == (Body.level-3)*10){
+						level++;
 						gc.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 						gc.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
 						gc.setFont(new Font(null, "Candara", 22, 1));
-						gc.drawText("LEVEL 1", canvas.getBounds().width/2-50, canvas.getBounds().height/2-30, 1);
+						gc.drawText("LEVEL " + level, canvas.getBounds().width/2-50, canvas.getBounds().height/2-30, 1);
 						gc.drawRectangle(0, 0, canvas.getBounds().width-1, canvas.getBounds().height-1);
 						try {
 							Thread.sleep(1500);
@@ -124,7 +126,7 @@ public class SnakeApp implements Serializable{
 		
 		gc.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 		gc.fillRectangle(0, 0, canvas.getBounds().width, canvas.getBounds().height);
-		if(level1)
+		if(level > 0)
 			gc.drawRectangle(0, 0, canvas.getBounds().width-1, canvas.getBounds().height-1);
 		gc.setFont(new Font(null, "Candara", 13, 1));
 		gc.drawText("Score: "+score+"", canvas.getBounds().width-100, 1);
@@ -159,6 +161,7 @@ public class SnakeApp implements Serializable{
 		
 		score = 0;
 		speed = 190;
+		level = 0;
 		
 		snk = new Body();
 		draw();
@@ -171,6 +174,7 @@ public class SnakeApp implements Serializable{
 			stream.writeObject(sposta);
 			stream.writeObject(score);
 			stream.writeObject(speed);
+			stream.writeObject(level);
 			stream.close();
 			return true;
 		} catch (Exception e1) {
@@ -185,6 +189,7 @@ public class SnakeApp implements Serializable{
 			sposta = (char) stream.readObject();
 			score = (int) stream.readObject();
 			speed = (int) stream.readObject();
+			level = (int) stream.readObject();
 			flag = false;
 			stream.close();
 			return true;
