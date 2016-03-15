@@ -124,10 +124,12 @@ public class SnakeApp implements Serializable{
 					}
 				}
 				draw();
-				if(snk.gameOver()){
+				if(snk.gameOver() || (hurdle != null && (hurdle.inBody(snk.getItem(0)) || hurdle.getItem(0).equals(snk.getItem(0)))) || (hurdle2 != null && (hurdle2.inBody(snk.getItem(0)) || hurdle2.getItem(0).equals(snk.getItem(0))))){
 					flag2 = false;
-					GC gc = new GC(canvas);
-					gc.drawText("GAME OVER", (canvas.getBounds().width-9)/2, canvas.getBounds().height/2-1);
+					gc.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
+					gc.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
+					gc.setFont(new Font(null, "Candara", 35, 1));
+					gc.drawText("GAME OVER", (canvas.getBounds().width-250)/2, canvas.getBounds().height/2-40, 1);
 				}
 				try {
 					Thread.sleep(speed);
@@ -175,6 +177,7 @@ public class SnakeApp implements Serializable{
 	private void initialize(){
 		Body.uni = 10;
 		sposta = 'u';
+		sp2 = 'k';
 		Punto.xMax = canvas.getBounds().width;
 		Punto.yMax = canvas.getBounds().height;
 		
@@ -183,6 +186,7 @@ public class SnakeApp implements Serializable{
 		
 		flag = false;
 		flag2 = true;
+		chkMove = true;
 		
 		score = 0;
 		speed = 190;
@@ -226,6 +230,7 @@ public class SnakeApp implements Serializable{
 			ObjectOutputStream stream = new ObjectOutputStream(new FileOutputStream("snake2.bin"));
 			stream.writeObject(snk);
 			stream.writeObject(hurdle);
+			stream.writeObject(hurdle2);
 			stream.writeObject(sposta);
 			stream.writeObject(score);
 			stream.writeObject(speed);
@@ -242,6 +247,7 @@ public class SnakeApp implements Serializable{
 			ObjectInputStream stream = new ObjectInputStream(new FileInputStream("snake2.bin"));
 			snk = (Body) stream.readObject();
 			hurdle = (Body) stream.readObject();
+			hurdle2 = (Body) stream.readObject();
 			sposta = (char) stream.readObject();
 			score = (int) stream.readObject();
 			speed = (int) stream.readObject();
