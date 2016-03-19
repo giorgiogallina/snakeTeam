@@ -95,7 +95,9 @@ public class SnakeApp implements Serializable{
 						yapple = random.nextInt(canvas.getBounds().height - snk.getUni()) / snk.getUni() * snk.getUni();
 					}while(snk.inBody(new Punto(xapple, yapple)) ||
 							(hurdle != null && (hurdle.inBody(new Punto(xapple, yapple)) || hurdle.getItem(0).equals(new Punto(xapple, yapple)))) ||
-							(hurdle2 != null && (hurdle2.inBody(new Punto(xapple, yapple)) || hurdle2.getItem(0).equals(new Punto(xapple, yapple)))) );
+							(hurdle2 != null && (hurdle2.inBody(new Punto(xapple, yapple)) || hurdle2.getItem(0).equals(new Punto(xapple, yapple)))) ||
+							(hurdle3 != null && (hurdle3.inBody(new Punto(xapple, yapple)) || hurdle3.getItem(0).equals(new Punto(xapple, yapple)))) ||
+							(hurdle4 != null && (hurdle4.inBody(new Punto(xapple, yapple)) || hurdle4.getItem(0).equals(new Punto(xapple, yapple)))) );
 					if(score % ((Body.level-3)*10) == 0){
 						level++;
 						
@@ -105,20 +107,12 @@ public class SnakeApp implements Serializable{
 						case 2:
 							hurdleInitialiser();
 							hurdle2Initialiser();
-							hurdle3Initialiser();
-							hurdle4Initialiser();
 							break;
 						case 3:
-							hurdleInitialiser();
-							hurdle2Initialiser();
 							hurdle3Initialiser();
 							hurdle4Initialiser();
 							break;
 						case 4:
-							hurdleInitialiser();
-							hurdle2Initialiser();
-							hurdle3Initialiser();
-							hurdle4Initialiser();
 							break;
 						default:
 							break;
@@ -137,7 +131,11 @@ public class SnakeApp implements Serializable{
 					}
 				}
 				draw();
-				if(snk.gameOver() || (hurdle != null && (hurdle.inBody(snk.getItem(0)) || hurdle.getItem(0).equals(snk.getItem(0)))) || (hurdle2 != null && (hurdle2.inBody(snk.getItem(0)) || hurdle2.getItem(0).equals(snk.getItem(0))))){
+				if(snk.gameOver() ||
+						(hurdle != null && (hurdle.inBody(snk.getItem(0)) || hurdle.getItem(0).equals(snk.getItem(0)))) ||
+						(hurdle2 != null && (hurdle2.inBody(snk.getItem(0)) || hurdle2.getItem(0).equals(snk.getItem(0)))) ||
+						(hurdle3 != null && (hurdle3.inBody(snk.getItem(0)) || hurdle3.getItem(0).equals(snk.getItem(0)))) ||
+						(hurdle4 != null && (hurdle4.inBody(snk.getItem(0)) || hurdle4.getItem(0).equals(snk.getItem(0))))){
 					flag2 = false;
 					gc.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 					gc.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
@@ -186,7 +184,7 @@ public class SnakeApp implements Serializable{
 			}
 			
 		}
-		if(hurdle3 != null){
+		if(hurdle3 != null && hurdle4 != null){
 			gc.setBackground(SWTResourceManager.getColor(0,0,255));
 			for(int i = 0; i < hurdle3.length(); i++){
 				gc.fillRectangle(hurdle3.getItemCoordinates(i)[0], hurdle3.getItemCoordinates(i)[1], Body.uni, Body.uni);
@@ -217,6 +215,9 @@ public class SnakeApp implements Serializable{
 		
 		snk = new Body();
 		hurdle = null;
+		hurdle2 = null;
+		hurdle3 = null;
+		hurdle4 = null;
 		draw();
 	}
 	
@@ -282,6 +283,8 @@ public class SnakeApp implements Serializable{
 			stream.writeObject(snk);
 			stream.writeObject(hurdle);
 			stream.writeObject(hurdle2);
+			stream.writeObject(hurdle3);
+			stream.writeObject(hurdle4);
 			stream.writeObject(sposta);
 			stream.writeObject(score);
 			stream.writeObject(speed);
@@ -301,6 +304,8 @@ public class SnakeApp implements Serializable{
 			snk = (Body) stream.readObject();
 			hurdle = (Body) stream.readObject();
 			hurdle2 = (Body) stream.readObject();
+			hurdle3 = (Body) stream.readObject();
+			hurdle4 = (Body) stream.readObject();
 			sposta = (char) stream.readObject();
 			score = (int) stream.readObject();
 			speed = (int) stream.readObject();
