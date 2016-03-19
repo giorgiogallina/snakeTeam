@@ -36,7 +36,7 @@ public class SnakeApp implements Serializable{
 	private GC gc;
 	
 	private Body snk;
-	private Body hurdle, hurdle2, movingHurdle;
+	private Body hurdle, hurdle2, hurdle3, hurdle4, movingHurdle;
 	private char sposta, sp2 = 'k';
 	private int xapple;
 	private int yapple;
@@ -50,7 +50,6 @@ public class SnakeApp implements Serializable{
 	private int speed;
 	
 	private Random random = new Random();
-	private Text text;
 
 	/**
 	 * Launch the application.
@@ -106,6 +105,20 @@ public class SnakeApp implements Serializable{
 						case 2:
 							hurdleInitialiser();
 							hurdle2Initialiser();
+							hurdle3Initialiser();
+							hurdle4Initialiser();
+							break;
+						case 3:
+							hurdleInitialiser();
+							hurdle2Initialiser();
+							hurdle3Initialiser();
+							hurdle4Initialiser();
+							break;
+						case 4:
+							hurdleInitialiser();
+							hurdle2Initialiser();
+							hurdle3Initialiser();
+							hurdle4Initialiser();
 							break;
 						default:
 							break;
@@ -171,6 +184,16 @@ public class SnakeApp implements Serializable{
 				gc.fillRectangle(hurdle2.getItemCoordinates(i)[0], hurdle2.getItemCoordinates(i)[1], Body.uni, Body.uni);
 				gc.drawRectangle(hurdle2.getItemCoordinates(i)[0], hurdle2.getItemCoordinates(i)[1], Body.uni, Body.uni);
 			}
+			
+		}
+		if(hurdle3 != null){
+			gc.setBackground(SWTResourceManager.getColor(0,0,255));
+			for(int i = 0; i < hurdle3.length(); i++){
+				gc.fillRectangle(hurdle3.getItemCoordinates(i)[0], hurdle3.getItemCoordinates(i)[1], Body.uni, Body.uni);
+				gc.drawRectangle(hurdle3.getItemCoordinates(i)[0], hurdle3.getItemCoordinates(i)[1], Body.uni, Body.uni);
+				gc.fillRectangle(hurdle4.getItemCoordinates(i)[0], hurdle4.getItemCoordinates(i)[1], Body.uni, Body.uni);
+				gc.drawRectangle(hurdle4.getItemCoordinates(i)[0], hurdle4.getItemCoordinates(i)[1], Body.uni, Body.uni);
+			}
 		}
 	}
 	
@@ -215,14 +238,42 @@ public class SnakeApp implements Serializable{
 		for(int i = 0; i < 4; i++)
 			hurdle2.move('l');
 		for(int i = 0; i < 10; i++)
-			hurdle2.increase('d');
-		for(int i = 0; i < 6; i++)
+			hurdle2.move('d');
+		hurdle2.move('l');
+		hurdle2.move('l');
+		for(int i = 0; i < 4; i++)
 			hurdle2.increase('l');
 		for(int i = 0; i < 20; i++)
 			hurdle2.increase('r');
 		hurdle2.increase('u');
 		for(int i = 0; i < 20; i++)
 			hurdle2.increase('l');
+	}
+	private void hurdle3Initialiser(){
+		hurdle3 = new Body();
+		for(int i = 0; i < 19; i++)
+			hurdle3.move('l');
+		for(int i = 0; i < 5; i++)
+			hurdle3.move('u');
+		hurdle3.increase('l');
+		for(int i = 0; i < 20; i++)
+			hurdle3.increase('d');
+		hurdle3.increase('r');
+		for(int i = 0; i < 16; i++)
+			hurdle3.increase('u');
+	}
+	private void hurdle4Initialiser(){
+		hurdle4 = new Body();
+		for(int i = 0; i < 19; i++)
+			hurdle4.move('r');
+		for(int i = 0; i < 5; i++)
+			hurdle4.move('u');
+		hurdle4.increase('r');
+		for(int i = 0; i < 20; i++)
+			hurdle4.increase('d');
+		hurdle4.increase('l');
+		for(int i = 0; i < 16; i++)
+			hurdle4.increase('u');
 	}
 	
 	private boolean write(){
@@ -235,6 +286,8 @@ public class SnakeApp implements Serializable{
 			stream.writeObject(score);
 			stream.writeObject(speed);
 			stream.writeObject(level);
+			stream.writeObject(xapple);
+			stream.writeObject(yapple);
 			stream.close();
 			return true;
 		} catch (Exception e1) {
@@ -252,6 +305,8 @@ public class SnakeApp implements Serializable{
 			score = (int) stream.readObject();
 			speed = (int) stream.readObject();
 			level = (int) stream.readObject();
+			xapple = (int) stream.readObject();
+			yapple = (int) stream.readObject();
 			flag = false;
 			stream.close();
 			return true;
