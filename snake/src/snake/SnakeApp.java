@@ -18,6 +18,7 @@ import org.eclipse.wb.swt.SWTResourceManager;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
@@ -36,7 +37,8 @@ public class SnakeApp implements Serializable{
 	private GC gc;
 	
 	private Body snk;
-	private Body hurdle, hurdle2, hurdle3, hurdle4, movingHurdle;
+	//private Body hurdle, hurdle2, hurdle3, hurdle4, movingHurdle;
+	private Rectangle hrdl = new Rectangle(190, 130, 210, 20), hrdl2 = new Rectangle(190, 220, 210, 20), hrdl3 = new Rectangle(90, 80, 20, 220), hrdl4 = new Rectangle(480, 80, 20, 220);
 	private char sposta, sp2 = 'k';
 	private int xapple;
 	private int yapple;
@@ -94,10 +96,10 @@ public class SnakeApp implements Serializable{
 						xapple = random.nextInt(canvas.getBounds().width - snk.getUni()) / snk.getUni() * snk.getUni();
 						yapple = random.nextInt(canvas.getBounds().height - snk.getUni()) / snk.getUni() * snk.getUni();
 					}while(snk.inBody(new Punto(xapple, yapple)) ||
-							(hurdle != null && (hurdle.inBody(new Punto(xapple, yapple)) || hurdle.getItem(0).equals(new Punto(xapple, yapple)))) ||
-							(hurdle2 != null && (hurdle2.inBody(new Punto(xapple, yapple)) || hurdle2.getItem(0).equals(new Punto(xapple, yapple)))) ||
-							(hurdle3 != null && (hurdle3.inBody(new Punto(xapple, yapple)) || hurdle3.getItem(0).equals(new Punto(xapple, yapple)))) ||
-							(hurdle4 != null && (hurdle4.inBody(new Punto(xapple, yapple)) || hurdle4.getItem(0).equals(new Punto(xapple, yapple)))) );
+							(hrdl != null && xapple >= hrdl.x && (xapple < (hrdl.x+hrdl.width) && yapple >= hrdl.y && (yapple < (hrdl.y+hrdl.height)))) ||
+							(hrdl2 != null && xapple >= hrdl2.x && (xapple < (hrdl2.x+hrdl2.width) && yapple >= hrdl2.y && (yapple < (hrdl2.y+hrdl2.height)))) ||
+							(hrdl3 != null && xapple >= hrdl3.x && (xapple < (hrdl3.x+hrdl3.width) && yapple >= hrdl3.y && (yapple < (hrdl3.y+hrdl4.height)))) ||
+							(hrdl4 != null && xapple >= hrdl4.x && (xapple < (hrdl4.x+hrdl4.width) && yapple >= hrdl4.y && (yapple < (hrdl3.y+hrdl4.height)))) );
 					if(score % ((Body.level-3)*10) == 0){
 						level++;
 						
@@ -105,12 +107,12 @@ public class SnakeApp implements Serializable{
 						case 1:
 							break;
 						case 2:
-							hurdleInitialiser();
-							hurdle2Initialiser();
+							hrdl = new Rectangle(190, 130, 200, 20);
+							hrdl2 = new Rectangle(190, 220, 200, 20);
 							break;
 						case 3:
-							hurdle3Initialiser();
-							hurdle4Initialiser();
+							hrdl3 = new Rectangle(90, 80, 20, 220);
+							hrdl4 = new Rectangle(480, 80, 20, 220);
 							break;
 						case 4:
 							break;
@@ -132,10 +134,10 @@ public class SnakeApp implements Serializable{
 				}
 				draw();
 				if(snk.gameOver() ||
-						(hurdle != null && (hurdle.inBody(snk.getItem(0)) || hurdle.getItem(0).equals(snk.getItem(0)))) ||
-						(hurdle2 != null && (hurdle2.inBody(snk.getItem(0)) || hurdle2.getItem(0).equals(snk.getItem(0)))) ||
-						(hurdle3 != null && (hurdle3.inBody(snk.getItem(0)) || hurdle3.getItem(0).equals(snk.getItem(0)))) ||
-						(hurdle4 != null && (hurdle4.inBody(snk.getItem(0)) || hurdle4.getItem(0).equals(snk.getItem(0))))){
+						(hrdl != null && snk.getItem(0).getX() >= hrdl.x && (snk.getItem(0).getX() < (hrdl.x+hrdl.width) && snk.getItem(0).getY() >= hrdl.y && (snk.getItem(0).getY() < (hrdl.y+hrdl.height)))) ||
+						(hrdl2 != null && snk.getItem(0).getX() >= hrdl2.x && (snk.getItem(0).getX() < (hrdl2.x+hrdl2.width) && snk.getItem(0).getY() >= hrdl2.y && (snk.getItem(0).getY() < (hrdl2.y+hrdl2.height)))) ||
+						(hrdl3 != null && snk.getItem(0).getX() >= hrdl3.x && (snk.getItem(0).getX() < (hrdl3.x+hrdl3.width) && snk.getItem(0).getY() >= hrdl3.y && (snk.getItem(0).getY() < (hrdl3.y+hrdl4.height)))) ||
+						(hrdl4 != null && snk.getItem(0).getX() >= hrdl4.x && (snk.getItem(0).getX() < (hrdl4.x+hrdl4.width) && snk.getItem(0).getY() >= hrdl4.y && (snk.getItem(0).getY() < (hrdl3.y+hrdl4.height))))){
 					flag2 = false;
 					gc.setBackground(SWTResourceManager.getColor(SWT.COLOR_WHITE));
 					gc.setForeground(SWTResourceManager.getColor(SWT.COLOR_BLACK));
@@ -174,24 +176,20 @@ public class SnakeApp implements Serializable{
 				gc.drawOval(snk.getItemCoordinates(i)[0], snk.getItemCoordinates(i)[1], Body.uni, Body.uni);
 			}
 		}
-		if(hurdle != null && hurdle2 != null){
+		if(hrdl != null && hrdl2 != null){
 			gc.setBackground(SWTResourceManager.getColor(0,0,255));
-			for(int i = 0; i < hurdle.length(); i++){
-				gc.fillRectangle(hurdle.getItemCoordinates(i)[0], hurdle.getItemCoordinates(i)[1], Body.uni, Body.uni);
-				gc.drawRectangle(hurdle.getItemCoordinates(i)[0], hurdle.getItemCoordinates(i)[1], Body.uni, Body.uni);
-				gc.fillRectangle(hurdle2.getItemCoordinates(i)[0], hurdle2.getItemCoordinates(i)[1], Body.uni, Body.uni);
-				gc.drawRectangle(hurdle2.getItemCoordinates(i)[0], hurdle2.getItemCoordinates(i)[1], Body.uni, Body.uni);
-			}
+				gc.fillRectangle(hrdl);
+				gc.drawRectangle(hrdl);
+				gc.fillRectangle(hrdl2);
+				gc.drawRectangle(hrdl2);
 			
 		}
-		if(hurdle3 != null && hurdle4 != null){
+		if(hrdl3 != null && hrdl4 != null){
 			gc.setBackground(SWTResourceManager.getColor(0,0,255));
-			for(int i = 0; i < hurdle3.length(); i++){
-				gc.fillRectangle(hurdle3.getItemCoordinates(i)[0], hurdle3.getItemCoordinates(i)[1], Body.uni, Body.uni);
-				gc.drawRectangle(hurdle3.getItemCoordinates(i)[0], hurdle3.getItemCoordinates(i)[1], Body.uni, Body.uni);
-				gc.fillRectangle(hurdle4.getItemCoordinates(i)[0], hurdle4.getItemCoordinates(i)[1], Body.uni, Body.uni);
-				gc.drawRectangle(hurdle4.getItemCoordinates(i)[0], hurdle4.getItemCoordinates(i)[1], Body.uni, Body.uni);
-			}
+				gc.fillRectangle(hrdl3);
+				gc.drawRectangle(hrdl3);
+				gc.fillRectangle(hrdl4);
+				gc.drawRectangle(hrdl4);
 		}
 	}
 	
@@ -214,77 +212,18 @@ public class SnakeApp implements Serializable{
 		level = 0;
 		
 		snk = new Body();
-		hurdle = null;
-		hurdle2 = null;
-		hurdle3 = null;
-		hurdle4 = null;
+		hrdl = hrdl2 = hrdl3 = hrdl4 = null;
 		draw();
-	}
-	
-	private void hurdleInitialiser(){
-		hurdle = new Body();
-		for(int i = 0; i < 4; i++)
-			hurdle.move('l');
-		for(int i = 0; i < 6; i++)
-			hurdle.increase('l');
-		hurdle.increase('d');
-		for(int i = 0; i < 20; i++)
-			hurdle.increase('r');
-		hurdle.increase('u');
-		for(int i = 0; i < 10; i++)
-			hurdle.increase('l');
-	}
-	private void hurdle2Initialiser(){
-		hurdle2 = new Body();
-		for(int i = 0; i < 4; i++)
-			hurdle2.move('l');
-		for(int i = 0; i < 10; i++)
-			hurdle2.move('d');
-		hurdle2.move('l');
-		hurdle2.move('l');
-		for(int i = 0; i < 4; i++)
-			hurdle2.increase('l');
-		for(int i = 0; i < 20; i++)
-			hurdle2.increase('r');
-		hurdle2.increase('u');
-		for(int i = 0; i < 20; i++)
-			hurdle2.increase('l');
-	}
-	private void hurdle3Initialiser(){
-		hurdle3 = new Body();
-		for(int i = 0; i < 19; i++)
-			hurdle3.move('l');
-		for(int i = 0; i < 5; i++)
-			hurdle3.move('u');
-		hurdle3.increase('l');
-		for(int i = 0; i < 20; i++)
-			hurdle3.increase('d');
-		hurdle3.increase('r');
-		for(int i = 0; i < 16; i++)
-			hurdle3.increase('u');
-	}
-	private void hurdle4Initialiser(){
-		hurdle4 = new Body();
-		for(int i = 0; i < 19; i++)
-			hurdle4.move('r');
-		for(int i = 0; i < 5; i++)
-			hurdle4.move('u');
-		hurdle4.increase('r');
-		for(int i = 0; i < 20; i++)
-			hurdle4.increase('d');
-		hurdle4.increase('l');
-		for(int i = 0; i < 16; i++)
-			hurdle4.increase('u');
 	}
 	
 	private boolean write(){
 		try {
 			ObjectOutputStream stream = new ObjectOutputStream(new FileOutputStream("snake2.bin"));
 			stream.writeObject(snk);
-			stream.writeObject(hurdle);
-			stream.writeObject(hurdle2);
-			stream.writeObject(hurdle3);
-			stream.writeObject(hurdle4);
+			stream.writeObject(hrdl);
+			stream.writeObject(hrdl2);
+			stream.writeObject(hrdl3);
+			stream.writeObject(hrdl4);
 			stream.writeObject(sposta);
 			stream.writeObject(score);
 			stream.writeObject(speed);
@@ -302,10 +241,10 @@ public class SnakeApp implements Serializable{
 		try {
 			ObjectInputStream stream = new ObjectInputStream(new FileInputStream("snake2.bin"));
 			snk = (Body) stream.readObject();
-			hurdle = (Body) stream.readObject();
-			hurdle2 = (Body) stream.readObject();
-			hurdle3 = (Body) stream.readObject();
-			hurdle4 = (Body) stream.readObject();
+			hrdl = (Rectangle) stream.readObject();
+			hrdl2 = (Rectangle) stream.readObject();
+			hrdl3 = (Rectangle) stream.readObject();
+			hrdl4 = (Rectangle) stream.readObject();
 			sposta = (char) stream.readObject();
 			score = (int) stream.readObject();
 			speed = (int) stream.readObject();
